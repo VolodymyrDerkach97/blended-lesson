@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { nanoid } from 'nanoid';
-import { Grid, GridItem, SearchForm, EditForm, Text, Todo } from 'components';
+import { Grid, GridItem, SearchForm, Todo } from 'components';
 
 export class Todos extends Component {
   state = {
@@ -27,10 +27,16 @@ export class Todos extends Component {
   handleTodoDelete = id => {
     this.setState({ todos: this.state.todos.filter(todo => todo.id !== id) });
   };
-  handleTodoEdit = id => {
-    const index = this.state.todos.findIndex(todo => todo.id === id);
-
-    this.setState(prevState => ({ todos: [...prevState.todos, ...todo] }));
+  handleTodoEdit = (id, newText) => {
+    this.setState(prevState => ({
+      todos: prevState.todos.map(todo => {
+        if (todo.id === id) {
+          return { ...todo, text: newText };
+        } else {
+          return todo;
+        }
+      }),
+    }));
   };
 
   render() {
@@ -43,7 +49,7 @@ export class Todos extends Component {
             <GridItem key={id}>
               <Todo
                 id={id}
-                onEdit={handleTodoEdit}
+                onEdit={(id, newText) => this.handleTodoEdit(id, newText)}
                 text={text}
                 index={index + 1}
                 onDelete={() => this.handleTodoDelete(id)}

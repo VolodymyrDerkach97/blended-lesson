@@ -1,32 +1,36 @@
 import { Text } from 'components';
-import { TodoWrapper, DeleteButton, EditButton } from './Todo.styled';
-import { RiDeleteBinLine, RiEdit2Line } from 'react-icons/ri';
+import { Component } from 'react';
+import { TodoWrapper, DeleteButton } from './Todo.styled';
+import { RiDeleteBinLine } from 'react-icons/ri';
 
 export class Todo extends Component {
   state = {
     text: this.props.text,
   };
 
-  submit = e => {
-    e.preventDefault();
-    this.props.onEdit(this.props.id);
+  handleChange = e => {
+    this.setState({ text: e.target.value });
   };
+
+  handleSubmit = e => {
+    e.preventDefault();
+    this.props.onEdit(this.props.id, this.state.text);
+  };
+
   render() {
     return (
       <TodoWrapper>
         <Text textAlign="center" marginBottom="20px">
           TODO #{this.props.index}
         </Text>
-        {/* <input value={text} /> */}
-        <SearchFormStyled onSubmit={this.submit}>
-          <InputSearch
+        <form onSubmit={this.handleSubmit}>
+          <input
+            size={15}
             value={this.state.text}
-            onChange={e => this.setState({ text: e.target.value })}
+            onChange={this.handleChange}
           />
-          <FormBtn>
-            <FiSearch />
-          </FormBtn>
-        </SearchFormStyled>
+        </form>
+
         <DeleteButton type="button" onClick={this.props.onDelete}>
           <RiDeleteBinLine size={24} />
         </DeleteButton>
